@@ -71,7 +71,6 @@ public class SocialMediaController {
         }else{
             ctx.status(401);
         }
-
     }
 
     //Create new Message
@@ -85,6 +84,8 @@ public class SocialMediaController {
             ctx.status(400);
         }
     }
+
+    
     //Retrieve All Messages
     private void allMessagesHandler(Context ctx){
         List<Message> messages = messageService.getAllMessages();
@@ -93,7 +94,10 @@ public class SocialMediaController {
 
     //Get One Message By ID
     private void oneMessageHandler(Context ctx){
-        ctx.json(messageService.getOneMessage(Integer.parseInt(ctx.pathParam("message_id"))));
+        Message messageRetrieved = messageService.getOneMessage(Integer.parseInt(ctx.pathParam("message_id")));
+        if(messageRetrieved != null){
+            ctx.json(messageRetrieved);
+        }
     }
 
     //Delete Message By ID

@@ -15,7 +15,7 @@ public class AccountService {
 
     //Create Account
     public Account createAccount(Account newAccount){
-        if(newAccount.username.length() > 0 && newAccount.password.length() >=4 && accountDAO.checkUsername(newAccount.username) == null){
+        if(newAccount.getUsername().length() > 0 && newAccount.getPassword().length() >=4 && accountDAO.checkUsername(newAccount.username) == null){
             return accountDAO.createAccount(newAccount);
         }
         return null;

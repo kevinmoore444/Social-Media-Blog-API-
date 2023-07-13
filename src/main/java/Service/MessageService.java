@@ -15,10 +15,10 @@ public class MessageService {
 
     //Create Messages
     public Message createMessage(Message message) {
-        if(message.getMessage_text().length() == 0 || message.getMessage_text().length() > 254){
-            return null;
+        if(message.getMessage_text().length() > 0 && message.getMessage_text().length() < 255 ){
+            return messageDAO.createMessage(message);
         }
-        return messageDAO.createMessage(message);
+        return null;
     }
 
     //Get All Messages
