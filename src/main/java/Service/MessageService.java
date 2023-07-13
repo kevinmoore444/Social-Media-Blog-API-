@@ -5,15 +5,15 @@ import java.util.List;
 
 public class MessageService {
 
-    //Declare an instance of the messageDao for use in the service.
+    //Instantiate MessageDao
     public MessageDAO messageDAO;
     
-    //No Arg Constructor which creates a messageDao
+    //No Arg Constructor
     public MessageService(){
         messageDAO = new MessageDAO();
     }
 
-    //Create Messages
+    //Create Message
     public Message createMessage(Message message) {
         if(message.getMessage_text().length() > 0 && message.getMessage_text().length() < 255 ){
             return messageDAO.createMessage(message);
@@ -31,19 +31,19 @@ public class MessageService {
         return messageDAO.getMessageById(message_id);
     }
 
-    // Get All Messages From User Given Account Id
+    // Get All Messages From User, Given Account Id
     public List<Message> getAllUserMessages(int posted_by){
         return messageDAO.getAllUserMessages(posted_by);
     }
 
-    // Delete a Message Given Message Id
+    // Delete a Message, Given Message Id
     public Message deleteMessageById(int message_id){
         Message messageToDelete = messageDAO.getMessageById(message_id);
         messageDAO.deleteMessageById(message_id);
         return messageToDelete;
     }
 
-    // Update Message Given Message Id
+    // Update Message, Given Message Id
     public Message updateMessage(int message_id, Message message){
         if(message.getMessage_text().length() > 0 && message.getMessage_text().length() < 255 && messageDAO.getMessageById(message_id) != null){
             messageDAO.updateMessage(message_id, message);

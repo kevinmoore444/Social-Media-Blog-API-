@@ -44,11 +44,6 @@ public class SocialMediaController {
         return app;
     }
 
-    /**
-     * This is an example handler for an example endpoint.
-     * @param context The Javalin Context object manages information about both the HTTP request and response.
-     */
-
     //Register User
     private void registrationHandler(Context ctx) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
@@ -85,12 +80,13 @@ public class SocialMediaController {
         }
     }
 
-    
+
     //Retrieve All Messages
     private void allMessagesHandler(Context ctx){
         List<Message> messages = messageService.getAllMessages();
         ctx.json(messages);
     }
+
 
     //Get One Message By ID
     private void oneMessageHandler(Context ctx){
@@ -122,9 +118,10 @@ public class SocialMediaController {
         }
 
     }
+
+    //Retreive all Messages from One User
     private void accountMessagesHandler(Context ctx){
         ctx.json(messageService.getAllUserMessages(Integer.parseInt(ctx.pathParam("account_id"))));
     }
-
 
 }

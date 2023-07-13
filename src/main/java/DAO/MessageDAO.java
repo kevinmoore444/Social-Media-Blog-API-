@@ -27,7 +27,7 @@ public class MessageDAO {
             //Execute update
             preparedStatement.executeUpdate();
             
-            //Retrieve and unpack the response. If there is a response, use it to create a new message object with the generated ID and 
+            //If successful, return new Message object. 
             ResultSet pkeyResultSet = preparedStatement.getGeneratedKeys();
             if(pkeyResultSet.next()){
                 int generated_message_id = (int) pkeyResultSet.getInt(1);
@@ -63,6 +63,7 @@ public class MessageDAO {
         }catch(SQLException e){
             System.out.println(e.getMessage());
         }
+        //Return list of messages.
         return messages;
     }
 
@@ -77,7 +78,7 @@ public class MessageDAO {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, posted_by);
 
-            //Execute Statement
+            //Execute Query
             ResultSet rs = preparedStatement.executeQuery();
 
             //With every row in the response, create a new message object and append it to our list of messages. 
@@ -91,6 +92,7 @@ public class MessageDAO {
         }catch(SQLException e){
             System.out.println(e.getMessage());
         }
+        //Return list of messages.
         return messages;
     }
 
@@ -104,7 +106,7 @@ public class MessageDAO {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, message_id);
 
-            //Execute Statement
+            //Execute Query
             ResultSet rs = preparedStatement.executeQuery();
 
             //Store the record in a message object and return it to the service. 
@@ -118,6 +120,7 @@ public class MessageDAO {
         }catch(SQLException e){
             System.out.println(e.getMessage());
         }
+        //If message was not found, return null.
         return null;
     }
 
@@ -130,7 +133,7 @@ public class MessageDAO {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, message_id);
 
-            //Execute Statement 
+            //Execute Update 
             preparedStatement.executeUpdate();
         } catch(SQLException e){
             System.out.println(e.getMessage());
@@ -146,11 +149,10 @@ public class MessageDAO {
             //Create a prepared Statement
             String sql = "UPDATE message SET message_text = ? WHERE message_id = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-
             preparedStatement.setString(1, message.getMessage_text());
             preparedStatement.setInt(2, message_id);
 
-            //Execute Statement
+            //Execute Update
             preparedStatement.executeUpdate();            
         }catch(SQLException e){
             System.out.println(e.getMessage());
