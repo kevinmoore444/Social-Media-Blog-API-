@@ -50,11 +50,27 @@ public class SocialMediaController {
      */
 
     //Register User
-    private void registrationHandler(Context ctx){
-
+    private void registrationHandler(Context ctx) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        Account account = mapper.readValue(ctx.body(), Account.class);
+        Account newAccount = accountService.createAccount(account);
+        if(newAccount!=null){
+            ctx.json(mapper.writeValueAsString(newAccount));
+        }else{
+            ctx.status(400);
+        }
     }
 
-    private void loginHandler(Context ctx){
+    //Login User
+    private void loginHandler(Context ctx) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        Account account = mapper.readValue(ctx.body(), Account.class);
+        Account newAccount = accountService.loginUser(account);
+        if(newAccount!=null){
+            ctx.json(mapper.writeValueAsString(newAccount));
+        }else{
+            ctx.status(401);
+        }
 
     }
 
@@ -82,16 +98,19 @@ public class SocialMediaController {
 
     //Delete Message By ID
     private void deleteHandler(Context ctx){
-        ctx.json(messageService.deleteMessageById(Integer.parseInt(ctx.pathParam("message_id"))));
+        Message messageDeleted = messageService.deleteMessageById(Integer.parseInt(ctx.pathParam("message_id")));
+        if(messageDeleted != null){
+            ctx.json(messageDeleted);
+        }
+        
     }
 
     //Update Message By ID
-    private void updateHandler(Context ctx)throws JsonProcessingException {
+    private void updateHandler(Context ctx) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         Message message = mapper.readValue(ctx.body(), Message.class);
         int message_id = Integer.parseInt(ctx.pathParam("message_id"));
         Message updatedMessage = messageService.updateMessage(message_id, message);
-        System.out.println(updatedMessage);
         if(updatedMessage == null){
             ctx.status(400);
         }else{

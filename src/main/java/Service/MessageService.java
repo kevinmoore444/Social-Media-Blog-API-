@@ -15,7 +15,7 @@ public class MessageService {
 
     //Create Messages
     public Message createMessage(Message message) {
-        if(message.message_text.length() == 0 || message.message_text.length() > 255){
+        if(message.getMessage_text().length() == 0 || message.getMessage_text().length() > 254){
             return null;
         }
         return messageDAO.createMessage(message);
@@ -38,13 +38,16 @@ public class MessageService {
 
     // Delete a Message Given Message Id
     public Message deleteMessageById(int message_id){
-        return messageDAO.deleteMessageById(message_id);
+        Message messageToDelete = messageDAO.getMessageById(message_id);
+        messageDAO.deleteMessageById(message_id);
+        return messageToDelete;
     }
 
     // Update Message Given Message Id
     public Message updateMessage(int message_id, Message message){
-        if(message.message_text.length() > 0 && message.message_text.length() <= 255 && getOneMessage(message_id) != null){
-            return messageDAO.updateMessage(message_id, message);
+        if(message.getMessage_text().length() > 0 && message.getMessage_text().length() < 255 && messageDAO.getMessageById(message_id) != null){
+            messageDAO.updateMessage(message_id, message);
+            return messageDAO.getMessageById(message_id);
         }
         return null;
     }

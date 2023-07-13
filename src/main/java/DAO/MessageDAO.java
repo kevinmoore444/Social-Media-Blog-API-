@@ -29,7 +29,7 @@ public class MessageDAO {
             //Retrieve and unpack the response. If there is a response, use it to create a new message object with the generated ID and 
             ResultSet pkeyResultSet = preparedStatement.getGeneratedKeys();
             if(pkeyResultSet.next()){
-                int generated_message_id = (int) pkeyResultSet.getLong(1);
+                int generated_message_id = (int) pkeyResultSet.getInt(1);
                 return new Message(generated_message_id, message.getPosted_by(), message.getMessage_text(), message.getTime_posted_epoch());
             }
         }catch(SQLException e){
@@ -121,7 +121,7 @@ public class MessageDAO {
     }
 
     //Delete One Message
-    public Message deleteMessageById(int message_id){
+    public void deleteMessageById(int message_id){
         Connection connection = ConnectionUtil.getConnection();
         try {
             //Create a prepared Statement
@@ -129,78 +129,31 @@ public class MessageDAO {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, message_id);
 
-            //Execute Statement, it will return an int number of rows effected, which will be 1 or 0 depending upon whether that message exists in the database. 
-            int rowsDeleted = preparedStatement.executeUpdate();
-
-            //If we successfully deleted a row, run a select query to return the deleted message
-            if (rowsDeleted > 0) {
-                //Create a prepared Statement
-                String sql2 = "SELECT * FROM message WHERE message_id = ?";
-                PreparedStatement preparedStatement2 = connection.prepareStatement(sql2);
-                preparedStatement2.setInt(1, message_id);
-
-                //Execute Statement
-                ResultSet rs = preparedStatement2.executeQuery();
-
-                //Store the deleted record in a message object and return it to the service. 
-                while(rs.next()){
-                    Message deletedMessage = new Message(rs.getInt("message_id"),
-                            rs.getInt("posted_by"),
-                            rs.getString("message_text"),
-                            rs.getLong("time_posted_epoch"));
-                    return deletedMessage;
-                }
-            }
-
+            //Execute Statement 
+            preparedStatement.executeUpdate();
         } catch(SQLException e){
             System.out.println(e.getMessage());
         }
-        //Return null if no message was found to delete.
-        return null;
     }
 
 
     //Update Message
-    public Message updateMessage(int message_id, Message message){
+    public void updateMessage(int message_id, Message message){
         Connection connection = ConnectionUtil.getConnection();
         
         try {
             //Create a prepared Statement
-            String sql = "UPDATE message SET posted_by = ?, message_text = ?, time_posted_epoch = ? WHERE message_id = ?";
+            String sql = "UPDATE message SET message_text = ? WHERE message_id = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
-            preparedStatement.setInt(1, message.posted_by);
-            preparedStatement.setString(2, message.message_text);
-            preparedStatement.setLong(3, message.time_posted_epoch);
-            preparedStatement.setInt(4, message_id);
+            preparedStatement.setString(1, message.getMessage_text());
+            preparedStatement.setInt(2, message_id);
 
             //Execute Statement
-            int rowsUpdated = preparedStatement.executeUpdate();
-
-            //If we successfully updated a row, run a select query to return the updated message
-            if (rowsUpdated > 0) {
-                //Create a prepared Statement
-                String sql2 = "SELECT * FROM message WHERE message_id = ?";
-                PreparedStatement preparedStatement2 = connection.prepareStatement(sql2);
-                preparedStatement2.setInt(1, message_id);
-
-                //Execute Statement
-                ResultSet rs = preparedStatement2.executeQuery();
-
-                //Store the deleted record in a message object and return it to the service. 
-                while(rs.next()){
-                    Message updatedMessage = new Message(rs.getInt("message_id"),
-                            rs.getInt("posted_by"),
-                            rs.getString("message_text"),
-                            rs.getLong("time_posted_epoch"));
-                    return updatedMessage;
-                }
-            }
+            preparedStatement.executeUpdate();            
         }catch(SQLException e){
             System.out.println(e.getMessage());
         }
-        //Return null if no message was found for updating.
-        return null;
     }
 
 }
