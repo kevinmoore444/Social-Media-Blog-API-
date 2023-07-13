@@ -59,33 +59,27 @@ public class AccountDAO {
     }
 
     //Check for existing username
-    public Account checkUsername(String username){
+    public String checkUsername(String username){
         Connection connection = ConnectionUtil.getConnection();
         
         try {
             //Create a prepared Statement
-            String sql = "SELECT * FROM message WHERE message_id = (?)";
+            String sql = "SELECT * FROM account WHERE username = (?)";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, message_id);
+            preparedStatement.setString(1, username);
 
             //Execute Statement
             ResultSet rs = preparedStatement.executeQuery();
 
             //Store the record in a message object and return it to the service. 
             while(rs.next()){
-                Message message = new Message(rs.getInt("message_id"),
-                        rs.getInt("posted_by"),
-                        rs.getString("message_text"),
-                        rs.getLong("time_posted_epoch"));
-                return message;
+                return rs.getString("username");
             }
         }catch(SQLException e){
             System.out.println(e.getMessage());
         }
         return null;
     }
-
-
 
 
     // Login

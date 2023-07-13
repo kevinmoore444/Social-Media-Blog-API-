@@ -161,17 +161,18 @@ public class MessageDAO {
 
 
     //Update Message
-    public Message updateMessage(int message_id, String message_text){
+    public Message updateMessage(int message_id, Message message){
         Connection connection = ConnectionUtil.getConnection();
         
         try {
             //Create a prepared Statement
-            String sql = "UPDATE message SET message_text = ? WHERE message_id = ?";
+            String sql = "UPDATE message SET posted_by = ?, message_text = ?, time_posted_epoch = ? WHERE message_id = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
-            //write PreparedStatement setString and setInt methods here.
-            preparedStatement.setString(1, message_text);
-            preparedStatement.setInt(2, message_id);
+            preparedStatement.setInt(1, message.posted_by);
+            preparedStatement.setString(2, message.message_text);
+            preparedStatement.setLong(3, message.time_posted_epoch);
+            preparedStatement.setInt(4, message_id);
 
             //Execute Statement
             int rowsUpdated = preparedStatement.executeUpdate();
