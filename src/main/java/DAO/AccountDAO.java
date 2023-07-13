@@ -58,6 +58,36 @@ public class AccountDAO {
         return null;
     }
 
+    //Check for existing username
+    public Account checkUsername(String username){
+        Connection connection = ConnectionUtil.getConnection();
+        
+        try {
+            //Create a prepared Statement
+            String sql = "SELECT * FROM message WHERE message_id = (?)";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, message_id);
+
+            //Execute Statement
+            ResultSet rs = preparedStatement.executeQuery();
+
+            //Store the record in a message object and return it to the service. 
+            while(rs.next()){
+                Message message = new Message(rs.getInt("message_id"),
+                        rs.getInt("posted_by"),
+                        rs.getString("message_text"),
+                        rs.getLong("time_posted_epoch"));
+                return message;
+            }
+        }catch(SQLException e){
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
+
+
+
+
     // Login
     public Account loginUser(Account account){
         Connection connection = ConnectionUtil.getConnection();
@@ -85,6 +115,4 @@ public class AccountDAO {
         }
         return null;
     }
-
-
 }

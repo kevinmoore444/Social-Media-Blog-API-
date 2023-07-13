@@ -155,13 +155,13 @@ public class MessageDAO {
         } catch(SQLException e){
             System.out.println(e.getMessage());
         }
-        //Return null if no message was 
+        //Return null if no message was found to delete.
         return null;
     }
 
 
     //Update Message
-    public void updateMessage(int message_id, String message_text){
+    public Message updateMessage(int message_id, String message_text){
         Connection connection = ConnectionUtil.getConnection();
         
         try {
@@ -174,27 +174,34 @@ public class MessageDAO {
             preparedStatement.setInt(2, message_id);
 
             //Execute Statement
-            preparedStatement.executeUpdate();
+            int rowsUpdated = preparedStatement.executeUpdate();
 
+            //If we successfully updated a row, run a select query to return the updated message
+            if (rowsUpdated > 0) {
+                //Create a prepared Statement
+                String sql2 = "SELECT * FROM message WHERE message_id = ?";
+                PreparedStatement preparedStatement2 = connection.prepareStatement(sql2);
+                preparedStatement2.setInt(1, message_id);
+
+                //Execute Statement
+                ResultSet rs = preparedStatement2.executeQuery();
+
+                //Store the deleted record in a message object and return it to the service. 
+                while(rs.next()){
+                    Message updatedMessage = new Message(rs.getInt("message_id"),
+                            rs.getInt("posted_by"),
+                            rs.getString("message_text"),
+                            rs.getLong("time_posted_epoch"));
+                    return updatedMessage;
+                }
+            }
         }catch(SQLException e){
             System.out.println(e.getMessage());
         }
+        //Return null if no message was found for updating.
+        return null;
     }
-
-
-
-
 
 }
 
-
-
-// Delete a Message Given Message Id
-// As a User, I should be able to submit a DELETE request on the endpoint DELETE localhost:8080/messages/{message_id}.
-// The deletion of an existing message should remove an existing message from the database. 
-// If the message existed, the response body should contain the now-deleted message. 
-// The response status should be 200, which is the default.
-// If the message did not exist, the response status should be 200, but the response body should be empty. 
-// This is because the DELETE verb is intended to be idempotent, ie, 
-// multiple calls to the DELETE endpoint should respond with the same type of response.
 

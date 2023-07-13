@@ -1,4 +1,33 @@
 package Service;
+import DAO.AccountDAO;
+import Model.Account;
+
+
+public class AccountService {
+    
+    //Declare an instance of the AccountDao for use in the service.
+    public AccountDAO accountDAO;
+    
+    //No Arg Constructor which creates an AccountDao
+    public AccountService(){
+        accountDAO = new AccountDAO();
+    }
+
+    //Create Account
+    public Account createAccount(Account newAccount){
+        if(newAccount.username.length() > 0 && newAccount.password.length() >=4){
+            return accountDAO.createAccount(newAccount);
+        }
+        return null;
+    }
+
+    //Login User
+    public Account loginUser(Account account){
+        return accountDAO.loginUser(account);
+    }
+
+}
+
 
 // User Registration
 // As a user, I should be able to create a new Account on the endpoint POST localhost:8080/register. 
@@ -20,8 +49,3 @@ package Service;
 // The response status should be 200 OK, which is the default.
 // If the login is not successful, the response status should be 401. (Unauthorized)
 
-
-
-public class AccountService {
-    
-}
