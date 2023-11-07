@@ -6,23 +6,24 @@ This project is a Java backend for a hypothetical social media app, where we mus
 ```
 ## Features implemented 
 ```
-This application contains working API endpoints for the following features.
+This application contains working API endpoints for the following features:
 
--Register User
--Log In User
--Create New Message
--Retrieve All Messages
--Retrieve One Message By ID
--Retrieve All Messages By User
--Delete Message By ID 
--Update Message By ID
+Register User (http://localhost:8080/register (post))
+Log In User (http://localhost:8080/login (post))
+Create New Message (http://localhost:8080/messages (post))
+Retrieve All Messages (http://localhost:8080/messages (get))
+Retrieve One Message By ID (http://localhost:8080/messages/{message_id} (get))
+Retrieve All Messages By User (http://localhost:8080/accounts/{account_id}/messages (get))
+Delete Message By ID (http://localhost:8080/messages/{message_id} (delete))
+Update Message By ID (http://localhost:8080/messages/{message_id} (patch))
 ```
 
 ### Technologies Used: 
 ```
-account_id integer primary key auto_increment,
-username varchar(255),
-password varchar(255)
+Java
+SQL
+Javalin
+JDBC
 ```
 
 ### Getting Started
@@ -32,14 +33,5 @@ password varchar(255)
 
 2) Open the code in IntelliJ, Spring, or your other favorite IDE, click on the “Main” class, and use your IDE to run the program. If done correctly, the terminal will state “listening on http://localhost:8080/ 
 
-3) Download and open the application “Postman”. You can use Postman to test each of my API endpoints. The endpoints are written out in my “SocialMediaController” class file and below
+3) Download and open the application “Postman”. You can use Postman to test each of my API endpoints written above. 
 
-Register User: http://localhost:8080/register (post) (provide username and password)
-Log In User: http://localhost:8080/login (post) (provide username and password)
-Create New Message: http://localhost:8080/messages (post) (provide posted_by, message_text, and time_posted_epoch)
-Retrieve All Messages: http://localhost:8080/messages (get)
-Retrieve One Message By ID: http://localhost:8080/messages/{message_id} (get)
-Delete Message By ID: http://localhost:8080/messages/{message_id} (delete) (provide message_id)
-Update Message By ID: http://localhost:8080/messages/{message_id} (patch) (provide message_id and message)
-Retrieve All Messages By User ID: http://localhost:8080/accounts/{account_id}/messages (get) (provide account_id)
-```
